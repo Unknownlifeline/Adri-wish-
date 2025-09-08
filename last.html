@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday Message Flip Box</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      height: 100vh;
+      width: 100vw;
+      min-height: 100vh;
+      min-width: 100vw;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7eeff;
+      background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="white"/><path d="M0 50 Q25 80 50 50 Q75 20 100 50" stroke="%23E0B3FF" stroke-width="2" fill="none"/><circle cx="25" cy="25" r="3" fill="%23ff4f8b"/><circle cx="75" cy="75" r="3" fill="%23b721ff"/><circle cx="65" cy="35" r="1.5" fill="%23fffde4"/><circle cx="35" cy="65" r="1.5" fill="%23b5fffc"/></svg>');
+      background-size: 140px 140px;
+      background-repeat: repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-container {
+      perspective: 1200px;
+      width: 200px;
+      height: 650px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (max-width: 600px) {
+      .card-container {
+        width: 93vw;
+        height: 85vw;
+        min-height: 350px;
+        max-width: 99vw;
+        max-height: 98vh;
+      }
+    }
+    .flip-label {
+      position: absolute;
+      top: -33px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.08rem;
+      letter-spacing: 1.5px;
+      padding: 3px 21px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.65);
+      color: #b721ff;
+      font-weight: 700;
+      box-shadow: 0 2px 8px #b721ff22;
+      z-index: 2;
+      pointer-events: none;
+      user-select: none;
+      border: 1.5px dashed #ff4f8b66;
+      transition: background 0.3s;
+    }
+    .flip-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.8s cubic-bezier(.42,1.6,.42,1);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    .flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 22px;
+      box-shadow: 0 6px 22px #b721ff2a, 0 1.5px 6px #ff4f8b11;
+      overflow: hidden;
+      background: rgba(255,255,255,0.90);
+      border: 2.5px solid #b721ff30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+    .card-front {
+      font-size: 1.38rem;
+      font-weight: 700;
+      color: #b721ff;
+      letter-spacing: 2px;
+      justify-content: center;
+      align-items: center;
+      background: rgba(255,255,255,0.92);
+      text-shadow: 0 2px 16px #ff4f8b29, 0 1px 1px #fff;
+      pointer-events: auto;
+      user-select: none;
+    }
+    .card-front .message-label {
+      text-align: center;
+      width: 100%;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #b721ff;
+      letter-spacing: 2px;
+      opacity: 0.88;
+      user-select: none;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(255,255,255,0.97);
+    }
+    .card-back-message {
+      color: #b721ff;
+      font-size: 1.01rem;
+      font-weight: 500;
+      margin: 0;
+      letter-spacing: 1.1px;
+      padding: 16px 11px;
+      text-shadow: 0 2px 12px #ff4f8b11;
+      background: rgba(255,255,255,0.14);
+      border-radius: 14px;
+      line-height: 1.44;
+      text-align: left;
+      width: 100%;
+      max-height: 89%;
+      overflow-y: auto;
+      box-sizing: border-box;
+      white-space: pre-line;
+    }
+    .card-back-message::-webkit-scrollbar {
+      width: 6px;
+      background: #f7eeff;
+      border-radius: 8px;
+    }
+    .card-back-message::-webkit-scrollbar-thumb {
+      background: #e0b3ffb5;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <div class="flip-label">Flip</div>
+    <div class="flip-card" id="flipCard">
+      <div class="card-face card-front">
+        <div class="message-label">Happy Birthday Debadrita...😇✍🏼</div>
+      </div>
+      <div class="card-face card-back">
+        <div class="card-back-message">
+Umm 🤔 9 September....!! Asmani bandariya.... 🩵!! Matlab tumara din.... 💫!! Toh sabse pehle janm ki bohot sari shubhkamnaye....🎂🎉!! Radha Krishn ji...🦚!! Humesha tumhe Khush rakhe... 🕊️Jo tumare liye sahi ho wo sab de..!! Bilkul sahi naam hai tumara Debadrita....🌹!! Bilkul apne naam ki terh hi ho tum.... Pyari si....🤍!! tumare ander is naam ki puri sundarta hai...✨🤞🏼!! Sabka Maan karna.... Samjha...!! Sabko izazat karna specially bade logo ki...🌟. aur jo tumhe wo batya tha na tum humesha sabke pao chhu ke unka samaan karti ho wo.....!!! Sako Pyar dena.💫. sab chiz..!! Hain tum dikhana nhi chalti kabhi yeh wo alag baat hai.. 🤔.!! Hain aur tumari tarif...!! Dekho main toh tumhe asamani bandariya, nili rakun, pagal ladki... 😁!! Aur bhi pata nhi kya kya... Wo sab pyar se aur tumhe pareshan karne ke liye bolta hu kyunki tumhe pareshan karne ..!! Mein na bohot maja aata hai... 😝!! Aur sabse badda thankuu tumhe...!! Tum na humesha mujhe hasa deti ho...!! Mera mood thik nhi rehta fhir bhi tumse baat karne ke baad an wo thik ho jata hai...!! Tunhari yehi sundarata hai mere liye toh...!! ✨...!! Yeh na tumari khubsurati hai...!! Tumara behaviour tumari ulti sidhi harkatein se koi bhi apni pareshani bhul jaye ✍🏼..!! Sabko ko samajhna...!! Aur bahar se Sundar wo toh tum ho hi buddhu 🤔....!! Cute lagti ho...!! Hain...!! Danger bhi ho uske sath 🤡...!! Saree mein bhi achchi lag rahi thi buddhu... in fact  jo ulte sidhe dress mere se puch ke pehne na unme bhi mujhe toh laga Cartoon lagogi...!! Meri choice ka pehne rahi...!! Per tum toh achhi lag rahi thi usme bhi 🤔....!! Per fhir bhi 😁 tum ho toh asamani bandariya hi 😝...!! Aur thoda Khush raha karo nili rakun 🤔🩵 Kitna overthinking karti ho ..!! Dimaag nhi hai fhir bhi...🤔...!! Aur jyda Khush mat ho aur yeh sab padhte time muskura kyun rahi 🧐...!! Is saal ki terh aage bhi tumhe pareshan karne ka Silsila jari rahega....😁....!! Tum humesha yesi hi rehna khurafati type ki bohot achhi lagti ho isme 🤔....!! Aur eak baar fhir se... Janmdin ki bohot si shubhkamnaye.....🥳🎉... ! Aur Dekho exam ki tension mein din kharab mat karna yeh...!! Special din hai tumara... Tum definitely bohot achhe mark lagogi...!! Tum bohot padh rahi uska return achha hi milega tumhe...!! Eak last baat bhagwan ji tumhe kaha se der rahe eak din mein 1hours mein 200-300 photo click karne ka stamina wo tum aur tumare krishn ji hi jaane 🫡....!! Main Krishn ji yehi yehi bolunga yeh stamina tumhe time to time humesha dete rahe 🫡🌟.....!!! aur hain tumari wajah se mujhe yeh dubara kyun tumhe jab bataya tum cake katogi 🤔...!! toh achhe se pura enjoy karna us moment ka✨...!! yeh nhi ki exam ka presure sath mein rakh ke dimaag ka dahi kar lena 🤔aur dekho wo toh bhi hua kuch nhi chahiye tumhe oer kuch chahiye hi 🤧 yesa kuch samjh nhi aaya ..!! ki kya karu bas wish hi kar raha 🤧...!! aab tumhe pata hai na mera dimag thoda kamjor hai toh kuch nhi aaya samjh yesa 🤧 sorry uske liye 🤧..... aur last thodi height bhi badha lo 😝 eak saal aur bad gya per tumari height nhi 😝
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // FLIP CARD LOGIC
+    const flipCard = document.getElementById('flipCard');
+    let isFlipped = false;
+    flipCard.addEventListener('click', function(e) {
+      if (!isFlipped) {
+        flipCard.classList.add('flipped');
+        isFlipped = true;
+      }
+    });
+  </script>
+</body>
+</html>

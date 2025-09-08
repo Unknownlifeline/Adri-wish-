@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday - Flip Card</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      height: 100vh;
+      width: 100vw;
+      min-height: 100vh;
+      min-width: 100vw;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7eeff;
+      background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="white"/><path d="M0 50 Q25 80 50 50 Q75 20 100 50" stroke="%23E0B3FF" stroke-width="2" fill="none"/><circle cx="25" cy="25" r="3" fill="%23ff4f8b"/><circle cx="75" cy="75" r="3" fill="%23b721ff"/><circle cx="65" cy="35" r="1.5" fill="%23fffde4"/><circle cx="35" cy="65" r="1.5" fill="%23b5fffc"/></svg>');
+      background-size: 140px 140px;
+      background-repeat: repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .center-wrap {
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .title {
+      font-size: 3.3rem;
+      font-weight: 900;
+      margin-top: 0;
+      margin-bottom: 60px;
+      letter-spacing: 3px;
+      color: #b721ff;
+      text-shadow:
+        0 2px 12px #fff,
+        0 1px 1px #ff4f8bcc,
+        0 4px 18px #b721ff44;
+      text-align: center;
+      user-select: none;
+      animation: shine 3s linear infinite;
+    }
+    @keyframes shine {
+      0% { filter: brightness(1.03);}
+      50% { filter: brightness(1.25);}
+      100%{ filter: brightness(1.03);}
+    }
+    .card-container {
+      perspective: 1200px;
+      width: 260px;
+      height: 340px;
+      margin-bottom: 32px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .flip-label {
+      position: absolute;
+      top: -33px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.15rem;
+      letter-spacing: 1.5px;
+      padding: 4px 23px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.65);
+      color: #b721ff;
+      font-weight: 700;
+      box-shadow: 0 2px 8px #b721ff22;
+      z-index: 2;
+      pointer-events: none;
+      user-select: none;
+      border: 1.5px dashed #ff4f8b66;
+      transition: background 0.3s;
+    }
+    .flip-card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.77s cubic-bezier(.42,1.6,.42,1);
+      transform-style: preserve-3d;
+      cursor: pointer;
+    }
+    .flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 18px;
+      box-shadow: 0 6px 22px #b721ff2a, 0 1.5px 6px #ff4f8b11;
+      overflow: hidden;
+      background: rgba(255,255,255,0.68);
+      border: 2.5px solid #b721ff30;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+    }
+    .card-front {
+      padding: 0;
+      background: none;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+    }
+    .card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 18px;
+      margin: 0;
+      box-shadow: none;
+      display: block;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-back-message {
+      color: #b721ff;
+      font-size: 1.65rem;
+      font-weight: bold;
+      margin: 0 0 2px 0;
+      letter-spacing: 1.1px;
+      padding: 30px 18px;
+      text-shadow: 0 2px 12px #ff4f8b14;
+      background: rgba(255,255,255,0.18);
+      border-radius: 15px;
+      line-height: 1.38;
+      text-align: center;
+      width: 100%;
+    }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      margin-top: 28px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.45s;
+    }
+    .button-group.show {
+      opacity: 1;
+      pointer-events: auto;
+      animation: btnAppear 0.7s cubic-bezier(.45,1.7,.44,.98);
+    }
+    @keyframes btnAppear {
+      from {opacity: 0; transform: translateY(40px) scale(0.7);}
+      to {opacity: 1; transform: translateY(0) scale(1);}
+    }
+    .btn-yes, .btn-no {
+      min-width: 74px;
+      padding: 14px 27px;
+      font-size: 1.16rem;
+      font-weight: bold;
+      color: #fff;
+      border: none;
+      border-radius: 24px;
+      outline: none;
+      user-select: none;
+      transition: box-shadow 0.3s, transform 0.18s, background 0.42s;
+      cursor: pointer;
+    }
+    .btn-yes {
+      background: linear-gradient(90deg, #ff4f8b, #b721ff, #ff4f8b);
+      background-size: 200% auto;
+      animation: glowBtn 1.2s infinite alternate, btnBgMove 2.5s linear infinite;
+      box-shadow: 0 0 18px 5px #ff4f8b50, 0 1px 8px #b721ff30;
+    }
+    @keyframes glowBtn {
+      0% {
+        box-shadow: 0 0 18px 5px #ff4f8b50, 0 1px 8px #b721ff30;
+        transform: scale(1);
+      }
+      100% {
+        box-shadow: 0 0 26px 10px #ff8cdd88, 0 2px 12px #b721ff44;
+        transform: scale(1.09);
+      }
+    }
+    @keyframes btnBgMove {
+      to {background-position: 200% center;}
+    }
+    .btn-no {
+      background: linear-gradient(90deg, #b721ff, #ff4f8b, #b721ff);
+      background-size: 200% auto;
+      animation: btnBgMove 2.15s linear infinite;
+      box-shadow: 0 0 13px 3px #b721ff30;
+      position: relative;
+    }
+    @media (max-width: 600px) {
+      .title {
+        font-size: 2.08rem;
+        margin-bottom: 22px;
+      }
+      .card-container { width: 92vw; height: 62vw; min-height: 200px;}
+      .card-back-message {font-size: 1.08rem; padding:14px 4vw;}
+      .btn-yes, .btn-no { min-width: 48px; padding: 9px 7vw; font-size: 0.97em;}
+      .button-group {gap: 16px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="center-wrap">
+    
+    <div class="card-container">
+      <div class="flip-label">Flip</div>
+      <div class="flip-card" id="flipCard">
+        <div class="card-face card-front">
+          <!-- Apni image ka src yahan daalein -->
+          <img src="i.jpg" id="cardImg">
+        </div>
+        <div class="card-face card-back">
+          <div class="card-back-message">
+              hehehe Kya hua aaj maan gyi na tum asamani bandariya ho 😁 dekho aab na mat kena tumne khud likha hai pehle 😁chalo eak bar fhir se batao tum ho na asmani bandariya yes or No.... aur dekho kuch bhi karo next page pe jane ke liye tumhe maana padega yeh 😝
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="button-group" id="buttonGroup">
+      <button class="btn-yes" id="yesBtn">Yes</button>
+      <button class="btn-no" id="noBtn">No</button>
+    </div>
+  </div>
+  <script>
+    // FLIP CARD LOGIC
+    const flipCard = document.getElementById('flipCard');
+    const buttonGroup = document.getElementById('buttonGroup');
+    let isFlipped = false;
+    flipCard.addEventListener('click', function(e) {
+      if (!isFlipped) {
+        flipCard.classList.add('flipped');
+        setTimeout(() => {
+          buttonGroup.classList.add('show');
+        }, 400);
+        isFlipped = true;
+      }
+    });
+
+    // YES BUTTON (Next page)
+    document.getElementById('yesBtn').onclick = function(e) {
+      e.stopPropagation();
+      window.location.href = 'last.html'; // Apna next page yahan daalein
+    };
+    // NO BUTTON (move randomly, never overlap Yes)
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    function moveNoBtn() {
+      const btnW = noBtn.offsetWidth,
+            btnH = noBtn.offsetHeight,
+            winW = window.innerWidth,
+            winH = window.innerHeight,
+            yesRect = yesBtn.getBoundingClientRect(),
+            buffer = 110;
+      let tries = 0;
+      while (tries < 60) {
+        const left = Math.floor(Math.random() * (winW - btnW - 10));
+        const top = Math.floor(Math.random() * (winH - btnH - 10));
+        const noCenX = left + btnW/2,
+              noCenY = top + btnH/2,
+              yesCenX = yesRect.left + yesRect.width/2,
+              yesCenY = yesRect.top + yesRect.height/2;
+        const dist = Math.sqrt((noCenX-yesCenX)**2 + (noCenY-yesCenY)**2);
+        if (dist > buffer) {
+          noBtn.style.position = "fixed";
+          noBtn.style.left = left+"px";
+          noBtn.style.top = top+"px";
+          return;
+        }
+        tries++;
+      }
+      noBtn.style.left = "10px";
+      noBtn.style.top = (winH-btnH-10)+"px";
+    }
+    // On click/hover/focus/touch, move No button
+    ['click','mouseenter','focus','touchstart'].forEach(evt=>{
+      noBtn.addEventListener(evt, function(e){
+        e.stopPropagation();
+        moveNoBtn();
+      });
+    });
+    // On window resize, reset No button position under the card
+    window.addEventListener('resize', () => {
+      if (!buttonGroup.classList.contains('show')) return;
+      noBtn.style.position = "relative";
+      noBtn.style.left = "";
+      noBtn.style.top = "";
+    });
+  </script>
+</body>
+</html>
