@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wait it....!!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ffdee9 0%, #b5fffc 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 3rem;
+      color: #ff4f8b;
+      margin-bottom: 30px;
+      text-shadow: 0 4px 16px #fff6, 0 2px 4px #c9b6ff95;
+      letter-spacing: 2px;
+    }
+    #countdown {
+      font-size: 2.2rem;
+      color: #333;
+      background: rgba(255,255,255,0.65);
+      padding: 15px 35px;
+      border-radius: 20px;
+      box-shadow: 0 2px 12px #e1bee7a5;
+      margin-bottom: 40px;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+    #next-btn {
+      display: none;
+      padding: 16px 48px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #fff;
+      background: linear-gradient(90deg, #ff4f8b, #b721ff);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px 5px #ff4f8b80, 0 1px 8px #b721ff90;
+      transition: box-shadow 0.3s, transform 0.2s;
+      animation: glow 1.5s infinite alternate;
+      margin-top: 10px;
+    }
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 20px 5px #ff4f8b80, 0 1px 8px #b721ff90;
+        transform: scale(1);
+      }
+      100% {
+        box-shadow: 0 0 35px 12px #ff8cddcc, 0 2px 18px #b721ff99;
+        transform: scale(1.05);
+      }
+    }
+    .sparkle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #fff 55%, #f7a6ff80 100%);
+      border-radius: 50%;
+      opacity: 0.7;
+      pointer-events: none;
+      animation: sparkleMove 5s linear infinite;
+    }
+    @keyframes sparkleMove {
+      0% { opacity: 0.9; transform: translateY(0) scale(1);}
+      50% { opacity: 0.4; transform: translateY(-30px) scale(1.3);}
+      100% { opacity: 0.9; transform: translateY(0) scale(1);}
+    }
+  </style>
+</head>
+<body>
+  <h1>Wait it....!!</h1>
+  <div id="countdown"></div>
+  <button id="next-btn" onclick="window.location.href='first.html'">Next</button>
+
+  <script>
+    // Sparkle background generator
+    function createSparkles(count) {
+      for(let i=0; i<count; i++) {
+        const sp = document.createElement('div');
+        sp.className = 'sparkle';
+        sp.style.left = Math.random() * 100 + 'vw';
+        sp.style.top = Math.random() * 100 + 'vh';
+        sp.style.animationDelay = (Math.random()*5) + 's';
+        sp.style.opacity = 0.4 + Math.random()*0.6;
+        document.body.appendChild(sp);
+      }
+    }
+    createSparkles(35);
+
+    // Countdown setup
+    const countdown = document.getElementById('countdown');
+    const nextBtn = document.getElementById('next-btn');
+    // Set target date to 9 September, 12:00 AM (midnight)
+    const targetDate = new Date();
+    targetDate.setMonth(8); // September (0-indexed)
+    targetDate.setDate(9);
+    targetDate.setHours(0,0,0,0); // midnight
+
+    // If today is past 9 September, set for next year
+    if (targetDate < new Date()) {
+      targetDate.setFullYear(targetDate.getFullYear() + 1);
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const mins = Math.floor((diff / (1000 * 60)) % 60);
+        const secs = Math.floor((diff / 1000) % 60);
+        countdown.textContent =
+          (days>0 ? days + "d " : "") +
+          String(hours).padStart(2,'0') + "h : " +
+          String(mins).padStart(2,'0') + "m : " +
+          String(secs).padStart(2,'0') + "s";
+      } else {
+        countdown.textContent = "Time's up!";
+        nextBtn.style.display = "inline-block";
+        clearInterval(timer);
+      }
+    }
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
